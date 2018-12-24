@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./styles/style.scss"],"names":[],"mappings":"AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA,0BAA0B","file":"style.css","sourcesContent":["* {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  outline: 0;\n  font-size: 100%;\n  vertical-align: baseline;\n  background: transparent; }\n"],"sourceRoot":""}
