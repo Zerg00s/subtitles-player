@@ -27933,26 +27933,6 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
 
 
 
-function Main(state) {
-    return __awaiter(this, void 0, void 0, function () {
-        var data, content, subtitles, newSubtitles;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4, fetch("carol.srt")];
-                case 1:
-                    data = _a.sent();
-                    return [4, data.text()];
-                case 2:
-                    content = _a.sent();
-                    subtitles = Object(subtitle__WEBPACK_IMPORTED_MODULE_3__["parse"])(content);
-                    state.setState({ subtitles: subtitles });
-                    newSubtitles = subtitles.filter(function (sub) { return sub.start > 15 * 60 * 1000; });
-                    state.setState({ text: newSubtitles[0].text });
-                    return [2];
-            }
-        });
-    });
-}
 function wait(delay) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -27967,14 +27947,73 @@ var Subtitles = (function (_super) {
     function Subtitles(props) {
         var _this = _super.call(this, props) || this;
         _this.state = { text: "...", subtitles: [], start: 0, end: 60 * 60 * 1000 };
-        Main(_this);
+        _this.GetSubtitles();
         return _this;
     }
     Subtitles.prototype.render = function () {
         var _this = this;
         return (react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null,
-            react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("h1", { className: 'text' }, this.state.text),
-            react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_input_range__WEBPACK_IMPORTED_MODULE_1___default.a, { formatLabel: function (value) { return value + " timespan"; }, maxValue: this.state.end, minValue: 0, step: 1000, value: this.state.start, onChange: function (value) { _this.setState({ start: value }); } })));
+            react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", { className: 'text display-linebreak' }, this.state.text),
+            react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_input_range__WEBPACK_IMPORTED_MODULE_1___default.a, { formatLabel: function (value) { return "" + Object(subtitle__WEBPACK_IMPORTED_MODULE_3__["toSrtTime"])(value); }, maxValue: this.state.end, minValue: 0, step: 1000, value: this.state.start, onChange: function (value) { _this.setState({ start: value }); _this.Play(); } })));
+    };
+    Subtitles.prototype.GetSubtitles = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var data, content, subtitles, end;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, fetch("carol.srt")];
+                    case 1:
+                        data = _a.sent();
+                        return [4, data.text()];
+                    case 2:
+                        content = _a.sent();
+                        subtitles = Object(subtitle__WEBPACK_IMPORTED_MODULE_3__["parse"])(content);
+                        end = parseInt(subtitles[subtitles.length - 1].end.toString(), 10);
+                        this.setState({ subtitles: subtitles, end: end });
+                        return [2];
+                }
+            });
+        });
+    };
+    Subtitles.prototype.Play = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var newSubtitles, i, subtitle, nextSubtitle, end, start, duration, nextStart, duration2;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        newSubtitles = this.state.subtitles.filter(function (sub) { return sub.start > _this.state.start; });
+                        this.setState({ text: newSubtitles[0].text });
+                        console.log(this.state.text);
+                        i = 0;
+                        return [4, wait(parseInt(this.state.subtitles[0].start.toString(), 10))];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2:
+                        if (false) {}
+                        subtitle = newSubtitles[i];
+                        nextSubtitle = newSubtitles[i + 1];
+                        console.log(subtitle.text);
+                        this.setState({ text: subtitle.text });
+                        end = parseInt(subtitle.end.toString(), 10);
+                        start = parseInt(subtitle.start.toString(), 10);
+                        duration = end - start;
+                        return [4, wait(duration)];
+                    case 3:
+                        _a.sent();
+                        this.setState({ text: "" });
+                        nextStart = parseInt(nextSubtitle.start.toString(), 10);
+                        duration2 = nextStart - end;
+                        return [4, wait(duration2)];
+                    case 4:
+                        _a.sent();
+                        i++;
+                        return [3, 2];
+                    case 5: return [2];
+                }
+            });
+        });
     };
     return Subtitles;
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]));

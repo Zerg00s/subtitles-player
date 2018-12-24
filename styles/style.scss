@@ -16,10 +16,30 @@ $font-family-sans-serif: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     align-items: center;
     justify-content: center;
   }
-  #root h1{
-    font-size: 120px;
-    margin:200px 50px;
+  #root {
+    justify-self: start;
+  }
+  .text{
+    font-size: 100px;
+    margin:100px 50px;
     color:white;
-    justify-self:center;
   }
  
+  #root{
+    width:100%;
+  }
+
+  .input-range, .text{
+    width:90% !important;
+  } 
+
+  .input-range{
+    margin-left: 60px;
+    position: fixed !important;
+    bottom:40px;
+  }
+
+  // Make sure multiline text is rendered properly in react:
+  .display-linebreak {
+    white-space: pre-line;
+  }

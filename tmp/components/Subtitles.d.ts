@@ -12,5 +12,7 @@ interface ISubtitlesState {
 export declare class Subtitles extends React.Component<{}, ISubtitlesState> {
     constructor(props: any);
     render(): JSX.Element;
+    private GetSubtitles;
+    private Play;
 }
 export {};
