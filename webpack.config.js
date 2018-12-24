@@ -8,7 +8,7 @@ module.exports = (env = {}, argv = {}) => {
         // mode: argv.mode || 'production', // we default to production  when no 'mode' arg is passed
         entry: {
             style: path.join(__dirname, '/styles', "style.scss"),
-            'index.js': path.join(__dirname, "/scripts", "index.ts"),
+            'index.js': path.join(__dirname, "/scripts", "index.tsx"),
         },
         output: {
             path: path.resolve(__dirname, "dist"),

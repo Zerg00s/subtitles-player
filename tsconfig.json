@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+      "outDir": "tmp",
+      "target": "es5",
+      "module": "esnext",
+      "lib": [
+        "es2017",
+        "dom"
+      ],
+      "rootDir": "scripts",
+      "jsx": "react",
+      "sourceMap": true,
+      "declaration": true,
+      "moduleResolution": "node",
+      "noImplicitAny": false,
+      "removeComments": true,
+      "experimentalDecorators": true,
+      "skipLibCheck": true,
+      "types": [
+        "node"
+      ],
+  
+    },
+    "exclude": [
+      "node_modules",
+      "webpack.config.js",
+      "gulpfile.js",
+      "build",
+      "dist",
+      "tmp",
+      "acceptance-tests",
+      "webpack",
+      "jest",
+    ]
+  }

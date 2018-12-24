@@ -5,7 +5,18 @@
   outline: 0;
   font-size: 100%;
   vertical-align: baseline;
-  background: transparent; }
+  background: black; }
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+
+#root h1 {
+  font-size: 120px;
+  margin: 200px 50px;
+  color: white;
+  justify-self: center; }
 
 
 /*# sourceMappingURL=style.css.map*/
