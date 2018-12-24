@@ -12,6 +12,7 @@
     "toastr": "^2.1.4"
   },
   "devDependencies": {
+    "@types/subtitle": "^2.0.0",
     "awesome-typescript-loader": "^5.2.1",
     "css-loader": "^2.0.0",
     "mini-css-extract-plugin": "^0.5.0",
