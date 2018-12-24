@@ -18,6 +18,12 @@ module.exports = (env = {}, argv = {}) => {
         module: {
             rules: [
                 {
+                    test: /\.css$/,
+                    use: [
+                        'style-loader', 'css-loader'
+                    ]
+                },
+                {
                     test: /\.scss$/,
                     use: [
                         // TODO: add css minifications
@@ -30,7 +36,7 @@ module.exports = (env = {}, argv = {}) => {
                 {
                     test: /\.ts(x?)$/,
                     exclude: /(node_modules|bower_components)/,
-                    use: [ "awesome-typescript-loader" ]
+                    use: ["awesome-typescript-loader"]
                 }
             ]
         },
