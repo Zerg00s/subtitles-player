@@ -39,7 +39,20 @@ $font-family-sans-serif: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     bottom:40px;
   }
 
+  .pause-button{
+    color:blue;
+    margin-left: 60px;
+    position: fixed !important;
+    bottom:40px;
+    right: 50px;
+  }
+  .pause-button:hover{
+    cursor: pointer;
+  }
+
   // Make sure multiline text is rendered properly in react:
   .display-linebreak {
     white-space: pre-line;
   }
+
+ 

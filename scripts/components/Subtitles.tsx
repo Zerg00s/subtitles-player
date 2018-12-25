@@ -6,27 +6,27 @@ import { parse, resync, stringify, subTitleType, toSrtTime, toVttTime } from 'su
 import '../../styles/sample.css';
 // https://github.com/gsantiago/subtitle.js#readme
 
-
-
-async function wait(delay: number) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, delay);
-    });
-}
-
 interface ISubtitlesState {
     text: string,
     subtitles: subTitleType[],
-    start: number | Range,
-    end: number
+    current: number,
+    end: number,
+    stopped: boolean,
+    step: number
 }
 
 export class Subtitles extends React.Component<{}, ISubtitlesState> {
 
     constructor(props) {
         super(props);
-        this.state = { text: "...", subtitles: [], start: 0, end: 60 * 60 * 1000 };
+        this.state = { text: "...", subtitles: [], current: 0, end: 60 * 60 * 1000, stopped: false, step: 100 };
         this.GetSubtitles();
+
+    }
+
+
+    public componentDidMount() {
+        this.runSteps();
     }
 
     public render() {
@@ -40,13 +40,46 @@ export class Subtitles extends React.Component<{}, ISubtitlesState> {
                     maxValue={this.state.end}
                     minValue={0}
                     step={1000}
-                    value={this.state.start}
+                    value={this.state.current}
                     // tslint:disable-next-line:jsx-no-lambda
-                    onChange={value => { this.setState({ start: value }); this.Play() }}
+                    onChange={value => { this.setState({ current: parseInt(value.toString(), 10) }); }}
                 />
-            </React.Fragment>
+
+                <button className="pause-button"
+                    // tslint:disable-next-line:jsx-no-lambda
+                    onClick={value => this.setState({ stopped: !this.state.stopped })} >{this.state.stopped ? "Play" : "Pause"}</button>
+            </React.Fragment >
         );
     }
+
+    private step() {
+        const subtitles: subTitleType[] = this.state.subtitles.filter((sub) => sub.start <= this.state.current && sub.end >= this.state.current);
+        // tslint:disable-next-line:no-console
+        console.log(this.state.current, subtitles);
+        if (subtitles && subtitles.length > 0) {
+            const subtitle = subtitles[0];
+            this.setState({ text: subtitle.text });
+        } else {
+            this.setState({ text: '' });
+        }
+    }
+
+    private async wait(delay: number) {
+        return new Promise((resolve) => {
+            setTimeout(resolve, delay);
+        });
+    }
+
+    private async runSteps() {
+        while (true) {
+            await this.step();
+            await this.wait(this.state.step);
+            if (!this.state.stopped) {
+                this.setState({ current: this.state.current + this.state.step });
+            }
+        }
+    }
+
 
     private async GetSubtitles() {
         const data = await fetch("carol.srt");
@@ -56,34 +89,4 @@ export class Subtitles extends React.Component<{}, ISubtitlesState> {
 
         this.setState({ subtitles, end });
     }
-    private async Play() {
-        const newSubtitles = this.state.subtitles.filter(sub => sub.start > this.state.start)
-        this.setState({ text: newSubtitles[0].text });
-        console.log(this.state.text);
-
-        let i = 0;
-        await wait(parseInt(this.state.subtitles[0].start.toString(), 10));
-        while (true) {
-            const subtitle = newSubtitles[i];
-            const nextSubtitle = newSubtitles[i + 1];
-            // tslint:disable-next-line:no-console
-            console.log(subtitle.text);
-            this.setState({ text: subtitle.text });
-
-            const end: number = parseInt(subtitle.end.toString(), 10);
-            const start: number = parseInt(subtitle.start.toString(), 10);
-            const duration = end - start;
-            await wait(duration);
-            // tslint:disable-next-line:no-console
-            // console.clear();
-            this.setState({ text: "" });
-
-            const nextStart: number = parseInt(nextSubtitle.start.toString(), 10);
-            const duration2 = nextStart - end;
-            await wait(duration2);
-            i++;
-        }
-    }
-
-
 }
