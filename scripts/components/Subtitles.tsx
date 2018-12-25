@@ -1,5 +1,7 @@
+import classNames from 'classnames'
 import * as React from 'react';
 import * as ReactDom from 'react-dom'
+import Dropzone from 'react-dropzone'
 import InputRange, { InputRangeClassNames, InputRangeProps, Range } from 'react-input-range';
 import 'react-input-range/lib/css/index.css';
 import { parse, resync, stringify, subTitleType, toSrtTime, toVttTime } from 'subtitle'
@@ -19,18 +21,36 @@ export class Subtitles extends React.Component<{}, ISubtitlesState> {
 
     constructor(props) {
         super(props);
-        this.state = { text: "...", subtitles: [], current: 0, end: 60 * 60 * 1000, stopped: false, step: 100 };
-        this.GetSubtitles("carol.srt");
+        this.state = { text: "Upload .SRT file first", subtitles: [], current: 0, end: 60 * 60 * 1000, stopped: false, step: 100 };
+        // this.getSubtitlesFromUrl("carol.srt");
     }
 
     public componentDidMount() {
-        this.runSteps();
+        //
     }
 
     public render() {
         return (
             <React.Fragment>
                 <div className='text display-linebreak'>{this.state.text}</div>
+
+                {this.state.subtitles.length === 0 && <Dropzone onDrop={this.onDrop}>
+                    {({ getRootProps, getInputProps, isDragActive }) => {
+                        return (
+                            <div
+                                {...getRootProps()}
+                                className={classNames('dropzone', { 'dropzone--isActive': isDragActive })}
+                            >
+                                <input {...getInputProps()} />
+                                {
+                                    isDragActive ?
+                                        <p>Drop files here...</p> :
+                                        <p>Try dropping an .SRT file here, or click to select a file to upload.</p>
+                                }
+                            </div>
+                        )
+                    }}
+                </Dropzone>}
 
                 <InputRange
                     // tslint:disable-next-line:jsx-no-lambda
@@ -45,9 +65,30 @@ export class Subtitles extends React.Component<{}, ISubtitlesState> {
 
                 <button className="pause-button"
                     // tslint:disable-next-line:jsx-no-lambda
-                    onClick={value => this.setState({ stopped: !this.state.stopped })} >{this.state.stopped ? "Play" : "Pause"}</button>
+                    onClick={() => this.setState({ stopped: !this.state.stopped })}
+                >{this.state.stopped ? "Play" : "Pause"}
+                </button>
             </React.Fragment >
         );
+    }
+
+    private onDrop = (acceptedFiles, rejectedFiles) => {
+        acceptedFiles.forEach((file: Blob) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const fileContentAsString = reader.result;
+                // tslint:disable-next-line:no-console
+                console.log(fileContentAsString);
+                this.getSubtitlesFromText(fileContentAsString.toString());
+                this.runSteps();
+            };
+            // tslint:disable-next-line:no-console
+            reader.onabort = () => console.log('file reading was aborted');
+            // tslint:disable-next-line:no-console
+            reader.onerror = () => console.log('file reading has failed');
+
+            reader.readAsBinaryString(file);
+        });
     }
 
     private step() {
@@ -71,17 +112,23 @@ export class Subtitles extends React.Component<{}, ISubtitlesState> {
             await this.step();
             await this.wait(this.state.step);
             if (!this.state.stopped) {
-                if(this.state.current < this.state.end){
+                if (this.state.current < this.state.end) {
                     this.setState({ current: this.state.current + this.state.step });
                 }
             }
         }
     }
 
-    private async GetSubtitles(srtFile:string) {
-        const data = await fetch(srtFile);
+    private async getSubtitlesFromURL(srtFileUrl: string) {
+        const data = await fetch(srtFileUrl);
         const content = await data.text();
         const subtitles = parse(content)
+        const end = parseInt(subtitles[subtitles.length - 1].end.toString(), 10);
+
+        this.setState({ subtitles, end });
+    }
+    private getSubtitlesFromText(srtContent: string) {
+        const subtitles = parse(srtContent);
         const end = parseInt(subtitles[subtitles.length - 1].end.toString(), 10);
 
         this.setState({ subtitles, end });

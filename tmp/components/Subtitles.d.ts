@@ -14,9 +14,11 @@ export declare class Subtitles extends React.Component<{}, ISubtitlesState> {
     constructor(props: any);
     componentDidMount(): void;
     render(): JSX.Element;
+    private onDrop;
     private step;
     private wait;
     private runSteps;
-    private GetSubtitles;
+    private getSubtitlesFromURL;
+    private getSubtitlesFromText;
 }
 export {};

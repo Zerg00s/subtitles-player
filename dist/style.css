@@ -44,5 +44,13 @@ body {
 .display-linebreak {
   white-space: pre-line; }
 
+.dropzone {
+  border: red dashed 2px;
+  height: 100px;
+  color: white;
+  font-size: 40px;
+  margin: 40px;
+  padding: 40px; }
+
 
 /*# sourceMappingURL=style.css.map*/

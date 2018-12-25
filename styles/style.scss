@@ -55,4 +55,11 @@ $font-family-sans-serif: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     white-space: pre-line;
   }
 
- 
+ .dropzone{
+   border: red dashed 2px;
+   height:100px;
+   color:white;
+   font-size: 40px;
+   margin:40px;
+   padding: 40px;
+ }
