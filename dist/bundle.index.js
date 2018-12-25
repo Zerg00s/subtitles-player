@@ -27938,7 +27938,7 @@ var Subtitles = (function (_super) {
     function Subtitles(props) {
         var _this = _super.call(this, props) || this;
         _this.state = { text: "...", subtitles: [], current: 0, end: 60 * 60 * 1000, stopped: false, step: 100 };
-        _this.GetSubtitles();
+        _this.GetSubtitles("carol.srt");
         return _this;
     }
     Subtitles.prototype.componentDidMount = function () {
@@ -27954,7 +27954,6 @@ var Subtitles = (function (_super) {
     Subtitles.prototype.step = function () {
         var _this = this;
         var subtitles = this.state.subtitles.filter(function (sub) { return sub.start <= _this.state.current && sub.end >= _this.state.current; });
-        console.log(this.state.current, subtitles);
         if (subtitles && subtitles.length > 0) {
             var subtitle = subtitles[0];
             this.setState({ text: subtitle.text });
@@ -27985,7 +27984,9 @@ var Subtitles = (function (_super) {
                     case 2:
                         _a.sent();
                         if (!this.state.stopped) {
-                            this.setState({ current: this.state.current + this.state.step });
+                            if (this.state.current < this.state.end) {
+                                this.setState({ current: this.state.current + this.state.step });
+                            }
                         }
                         return [3, 0];
                     case 3: return [2];
@@ -27993,12 +27994,12 @@ var Subtitles = (function (_super) {
             });
         });
     };
-    Subtitles.prototype.GetSubtitles = function () {
+    Subtitles.prototype.GetSubtitles = function (srtFile) {
         return __awaiter(this, void 0, void 0, function () {
             var data, content, subtitles, end;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, fetch("carol.srt")];
+                    case 0: return [4, fetch(srtFile)];
                     case 1:
                         data = _a.sent();
                         return [4, data.text()];

@@ -20,10 +20,8 @@ export class Subtitles extends React.Component<{}, ISubtitlesState> {
     constructor(props) {
         super(props);
         this.state = { text: "...", subtitles: [], current: 0, end: 60 * 60 * 1000, stopped: false, step: 100 };
-        this.GetSubtitles();
-
+        this.GetSubtitles("carol.srt");
     }
-
 
     public componentDidMount() {
         this.runSteps();
@@ -54,8 +52,6 @@ export class Subtitles extends React.Component<{}, ISubtitlesState> {
 
     private step() {
         const subtitles: subTitleType[] = this.state.subtitles.filter((sub) => sub.start <= this.state.current && sub.end >= this.state.current);
-        // tslint:disable-next-line:no-console
-        console.log(this.state.current, subtitles);
         if (subtitles && subtitles.length > 0) {
             const subtitle = subtitles[0];
             this.setState({ text: subtitle.text });
@@ -75,14 +71,15 @@ export class Subtitles extends React.Component<{}, ISubtitlesState> {
             await this.step();
             await this.wait(this.state.step);
             if (!this.state.stopped) {
-                this.setState({ current: this.state.current + this.state.step });
+                if(this.state.current < this.state.end){
+                    this.setState({ current: this.state.current + this.state.step });
+                }
             }
         }
     }
 
-
-    private async GetSubtitles() {
-        const data = await fetch("carol.srt");
+    private async GetSubtitles(srtFile:string) {
+        const data = await fetch(srtFile);
         const content = await data.text();
         const subtitles = parse(content)
         const end = parseInt(subtitles[subtitles.length - 1].end.toString(), 10);
