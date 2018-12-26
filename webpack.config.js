@@ -4,8 +4,8 @@ const MiniCss = require('mini-css-extract-plugin');
 module.exports = (env = {}, argv = {}) => {
     const config = {
         // cache: true,
-        mode: argv.mode || "development",   // we default to development when no 'mode' arg is passed
-        // mode: argv.mode || 'production', // we default to production  when no 'mode' arg is passed
+        // mode: argv.mode || "development",   // we default to development when no 'mode' arg is passed
+        mode: argv.mode || 'production', // we default to production  when no 'mode' arg is passed
         entry: {
             style: path.join(__dirname, '/styles', "style.scss"),
             'index.js': path.join(__dirname, "/scripts", "index.tsx"),
@@ -14,7 +14,7 @@ module.exports = (env = {}, argv = {}) => {
             path: path.resolve(__dirname, "dist"),
             filename: "bundle.[name]"
         },
-        devtool: "source-map",
+        devtool: "source-map", // controls if and how source maps are generated.
         module: {
             rules: [
                 {
