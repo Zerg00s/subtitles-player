@@ -18,7 +18,8 @@ module.exports = (env = {}, argv = {}) => {
         module: {
             rules: [
                 {
-                    test: /\.css$/,
+                    test: /\.css$/, // now we can import .css files from TypeScript: 
+                    // import '../../styles/sample.css';
                     use: [
                         'style-loader', 'css-loader'
                     ]
